@@ -102,9 +102,11 @@ class AdminDashboardController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,processed,completed,rejected',
+            'admin_notes' => 'nullable|string', // Tambahkan validasi ini
         ]);
 
         $informationRequest->status = $request->status;
+        $informationRequest->admin_notes = $request->admin_notes; // Simpan catatan admin
         $informationRequest->save();
 
         return redirect()->route('admin.requests.index')->with('success', 'Status permohonan berhasil diperbarui!');
@@ -114,9 +116,11 @@ class AdminDashboardController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,processed,completed,rejected',
+            'admin_notes' => 'nullable|string', // Tambahkan validasi ini
         ]);
 
         $objectionRequest->status = $request->status;
+        $objectionRequest->admin_notes = $request->admin_notes; // Simpan catatan admin
         $objectionRequest->save();
 
         return redirect()->route('admin.objections.index')->with('success', 'Status pengajuan keberatan berhasil diperbarui!');

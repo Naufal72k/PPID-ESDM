@@ -23,8 +23,8 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="flex items-center mb-6 md:mb-0">
-                    <img src="https://via.placeholder.com/90" alt="Logo Dinas ESDM NTB"
-                        class="h-20 w-20 mr-5 rounded-full shadow-lg">
+                    <img src="/images/logo-esdm.png" alt=""
+                        class="h-20 w-20 mr-5 rounded-full shadow-lg object-cover object-left objec">
                     <div>
                         <h1 class="text-3xl font-extrabold leading-tight">Dinas Energi dan Sumber Daya Mineral</h1>
                         <p class="text-xl font-semibold opacity-90">Provinsi Nusa Tenggara Barat</p>

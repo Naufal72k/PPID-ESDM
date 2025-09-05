@@ -113,7 +113,7 @@
             <div class="flex items-center justify-between p-4 border-b border-gray-200">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-landmark text-2xl"></i>
-                    <span class="logo-text text-xl font-bold">InfoPublik</span>
+                    <span class="logo-text text-xl font-bold">PPID - ESDM</span>
                 </div>
                 <button id="toggleSidebar" class="text-gray-600 focus:outline-none lg:hidden">
                     <i class="fas fa-times"></i>
@@ -191,18 +191,7 @@
                         <h1 class="text-xl font-semibold text-gray-800">@yield('title')</h1>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <input type="text" placeholder="Cari..."
-                                class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                        <div class="relative">
-                            <button class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                                <i class="fas fa-bell text-xl"></i>
-                                <span
-                                    class="notification-badge bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-                            </button>
-                        </div>
+
                         <div class="dropdown relative">
                             <button class="flex items-center space-x-2 focus:outline-none">
                                 <div
@@ -212,21 +201,7 @@
                                 <span class="hidden md:inline">Admin</span>
                                 <i class="fas fa-chevron-down text-xs hidden md:inline"></i>
                             </button>
-                            <div
-                                class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 hidden">
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pengaturan</a>
-                                {{-- Tombol Logout di Dropdown --}}
-                                <form action="{{ route('admin.logout') }}" method="POST" class="w-full">
-                                    @csrf
-                                    <button type="submit"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                                        Logout
-                                    </button>
-                                </form>
-                            </div>
+
                         </div>
                     </div>
                 </div>

@@ -31,15 +31,16 @@
                     </td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center">
-                            <a href="{{ route('admin.requests.show', $request->id) }}"
+                            <a href="{{ route('admin.requests.show', $request) }}"
                                 class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                 <i class="fas fa-eye"></i>
                             </a>
+
                             <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                <div x-data="{ open: false }" class="relative inline-block text-left">
+                                <div x-data="{ open: false, selectedStatus: '{{ $request->status }}', adminNotes: '{{ $request->admin_notes ?? '' }}' }" class="relative inline-block text-left">
                                     <button @click="open = !open" type="button"
                                         class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                        id="options-menu" aria-haspopup="true" aria-expanded="true">
+                                        id="options-menu-{{ $request->id }}" aria-haspopup="true" aria-expanded="true">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
@@ -50,25 +51,39 @@
                                         x-transition:leave="transition ease-in duration-75"
                                         x-transition:leave-start="transform opacity-100 scale-100"
                                         x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                        class="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                                         <div class="py-1" role="menu" aria-orientation="vertical"
-                                            aria-labelledby="options-menu">
+                                            aria-labelledby="options-menu-{{ $request->id }}">
                                             <form action="{{ route('admin.requests.update_status', $request->id) }}"
-                                                method="POST">
+                                                method="POST" class="p-4">
                                                 @csrf
                                                 @method('PUT')
-                                                <button type="submit" name="status" value="pending"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                                                    role="menuitem">Pending</button>
-                                                <button type="submit" name="status" value="processed"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                                                    role="menuitem">Diproses</button>
-                                                <button type="submit" name="status" value="completed"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                                                    role="menuitem">Selesai</button>
-                                                <button type="submit" name="status" value="rejected"
-                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                                                    role="menuitem">Ditolak</button>
+                                                <div class="mb-4">
+                                                    <label for="status-{{ $request->id }}"
+                                                        class="block text-sm font-medium text-gray-700">Ubah
+                                                        Status</label>
+                                                    <select id="status-{{ $request->id }}" name="status"
+                                                        x-model="selectedStatus"
+                                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                                        <option value="pending">Pending</option>
+                                                        <option value="processed">Diproses</option>
+                                                        <option value="completed">Selesai</option>
+                                                        <option value="rejected">Ditolak</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-4"
+                                                    x-show="selectedStatus === 'rejected' || selectedStatus === 'completed'">
+                                                    <label for="admin_notes-{{ $request->id }}"
+                                                        class="block text-sm font-medium text-gray-700">Keterangan Admin
+                                                        (Opsional)
+                                                    </label>
+                                                    <textarea id="admin_notes-{{ $request->id }}" name="admin_notes" x-model="adminNotes" rows="3"
+                                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                                                </div>
+                                                <button type="submit"
+                                                    class="w-full bg-blue-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                    Simpan
+                                                </button>
                                             </form>
                                         </div>
                                     </div>

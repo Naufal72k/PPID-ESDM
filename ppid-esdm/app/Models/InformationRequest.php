@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class InformationRequest extends Model
 {
@@ -22,8 +23,17 @@ class InformationRequest extends Model
         'copy_method',
         'retrieval_method',
         'status',
-        'ticket_number'
+        'ticket_number',
+        'admin_notes',
+        'unique_search_id'
     ];
+
+    // Generate kode unik pendek (max 20 karakter) untuk pencarian
+    public function getUniqueSearchIdAttribute()
+    {
+        $encrypted = Crypt::encryptString($this->id . '-' . $this->ticket_number);
+        return substr(str_replace(['/', '+', '='], '', base64_encode($encrypted)), 0, 20);
+    }
 
     // Generate nomor tiket otomatis
     public static function generateTicketNumber()

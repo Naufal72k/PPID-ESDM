@@ -52,7 +52,7 @@
                     <li class="mr-2" role="presentation">
                         <button class="inline-block p-4 border-b-2 rounded-t-lg"
                             :class="{ 'border-blue-600 text-blue-600': activeTab === 'informationRequest', 'border-transparent hover:text-gray-600 hover:border-gray-300': activeTab !== 'informationRequest' }"
-                            @click="activeTab = 'informationRequest'" type="button" role="tab"
+                            @click ="activeTab = 'informationRequest'" type="button" role="tab"
                             aria-controls="information-request" aria-selected="true">
                             Permohonan Informasi
                         </button>

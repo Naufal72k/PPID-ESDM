@@ -2,160 +2,143 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bukti Permohonan Informasi - {{ $informationRequest->ticket_number }}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bukti Permohonan Informasi - {{ $informationRequest->unique_search_id }}</title> {{-- Ubah title --}}
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #fff;
-            /* Pastikan background putih untuk cetak */
             color: #333;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Sembunyikan elemen yang tidak perlu saat dicetak */
         @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-
             .no-print {
                 display: none !important;
-            }
-
-            /* Pastikan gambar tidak tersembunyi */
-            img {
-                display: block !important;
-                visibility: visible !important;
             }
         }
     </style>
 </head>
 
-<body onload="window.print()" class="font-poppins">
-    <div class="container mx-auto p-6">
-        <div class="text-center mb-8">
-            <img src="https://via.placeholder.com/90" alt="Logo Dinas ESDM NTB"
-                class="h-20 w-20 mx-auto mb-4 rounded-full">
-            <h1 class="text-2xl font-bold text-gray-800">BUKTI PERMOHONAN INFORMASI PUBLIK</h1>
-            <h2 class="text-xl font-semibold text-gray-700">Dinas Energi dan Sumber Daya Mineral Provinsi Nusa Tenggara
-                Barat</h2>
-            <p class="text-sm text-gray-600">PPID Dinas ESDM NTB</p>
-        </div>
+<body class="p-6 bg-gray-50">
+    {{-- Kolom Pencarian (tidak dicetak) --}}
+    <div class="no-print max-w-md mx-auto mb-6">
+        <form action="{{ route('user.status.search') }}" method="POST" class="flex gap-2">
+            @csrf
+            <input type="text" name="unique_search_id" placeholder="Masukkan kode unik Anda" {{-- Ubah placeholder --}}
+                class="flex-grow border border-gray-300 rounded px-3 py-2" required />
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Cari</button>
+        </form>
+    </div>
 
-        <div class="bg-white border border-gray-300 rounded-lg shadow-sm p-6 mb-6">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-                <p class="text-lg font-semibold">Nomor Tiket: <span
-                        class="text-blue-600">{{ $informationRequest->ticket_number }}</span></p>
-                <p class="text-sm text-gray-600">Tanggal Pengajuan:
-                    {{ $informationRequest->created_at->format('d M Y H:i') }}</p>
+    @php
+        // Fungsi ini tidak lagi relevan untuk tampilan unique_search_id, tetapi tetap ada jika ticket_number masih ingin diformat
+        function formatTicketNumber($ticketNumber)
+        {
+            if (str_starts_with($ticketNumber, 'OBJECTION-')) {
+                return 'Keberatan-' . substr($ticketNumber, strlen('OBJECTION-'));
+            } elseif (str_starts_with($ticketNumber, 'PPID-')) {
+                return 'Informasi-' . substr($ticketNumber, strlen('PPID-'));
+            }
+            return $ticketNumber;
+        }
+    @endphp
+
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
+        <h1 class="text-2xl font-bold mb-4 text-center">BUKTI PERMOHONAN INFORMASI PUBLIK</h1>
+
+        {{-- <p class="mb-2 font-semibold">Nomor Tiket: <span
+                class="text-blue-600">{{ formatTicketNumber($informationRequest->ticket_number) }}</span></p> --}}
+        {{-- Tampilkan Kode Unik untuk Pencarian --}}
+        <p class="mb-2 font-semibold">Kode Unik Pencarian: <span
+                class="text-blue-600 break-all">{{ $informationRequest->unique_search_id }}</span></p>
+        <p class="mb-6 text-gray-600">Tanggal Pengajuan: {{ $informationRequest->created_at->format('d M Y H:i') }}</p>
+
+        <h2 class="text-xl font-semibold mb-3">Data Pemohon</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+                <p class="font-medium">Nama Lengkap</p>
+                <p>{{ $informationRequest->full_name }}</p>
             </div>
-
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Data Pemohon</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
-                <div>
-                    <p class="text-gray-500">Nama Lengkap:</p>
-                    <p class="font-medium">{{ $informationRequest->full_name }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Pekerjaan:</p>
-                    <p class="font-medium">{{ $informationRequest->occupation }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Identitas:</p>
-                    <p class="font-medium">{{ $informationRequest->identity_type }} -
-                        {{ $informationRequest->identity_number }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Telepon/HP:</p>
-                    <p class="font-medium">{{ $informationRequest->phone }}</p>
-                </div>
+            <div>
+                <p class="font-medium">Pekerjaan</p>
+                <p>{{ $informationRequest->occupation }}</p>
+            </div>
+            <div>
+                <p class="font-medium">Identitas</p>
+                <p>{{ $informationRequest->identity_type }} - {{ $informationRequest->identity_number }}</p>
+            </div>
+            <div>
+                <p class="font-medium">Telepon/HP</p>
+                <p>{{ $informationRequest->phone }}</p>
+            </div>
+            <div class="md:col-span-2">
+                <p class="font-medium">Alamat</p>
+                <p>{{ $informationRequest->address }}</p>
+            </div>
+            @if ($informationRequest->identity_scan_path)
                 <div class="md:col-span-2">
-                    <p class="text-gray-500">Alamat:</p>
-                    <p class="font-medium">{{ $informationRequest->address }}</p>
+                    <p class="font-medium">Scan Identitas</p>
+                    @php
+                        $filePath = asset($informationRequest->identity_scan_path);
+                        $fileExtension = pathinfo($informationRequest->identity_scan_path, PATHINFO_EXTENSION);
+                    @endphp
+                    @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                        <img src="{{ $filePath }}" alt="Scan Identitas" class="w-48 rounded shadow" />
+                    @elseif ($fileExtension == 'pdf')
+                        <p>Dokumen PDF (silakan unduh untuk melihatnya)</p>
+                        <a href="{{ $filePath }}" target="_blank" class="text-blue-600 underline">Unduh PDF</a>
+                    @else
+                        <p>Tipe file tidak didukung untuk pratinjau.</p>
+                    @endif
                 </div>
+            @endif
+        </div>
 
-                {{-- BAGIAN BARU UNTUK MENAMPILKAN GAMBAR SCAN IDENTITAS --}}
-                @if ($informationRequest->identity_scan_path)
-                    <div class="md:col-span-2">
-                        <p class="text-gray-500">Scan Identitas:</p>
-                        @php
-                            $filePath = asset($informationRequest->identity_scan_path);
-                            $fileExtension = pathinfo($informationRequest->identity_scan_path, PATHINFO_EXTENSION);
-                        @endphp
+        <h2 class="text-xl font-semibold mb-3">Detail Permohonan</h2>
+        <p class="mb-4 whitespace-pre-line">{{ $informationRequest->information_details }}</p>
 
-                        @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                            <div class="mt-2">
-                                <img src="{{ $filePath }}" alt="Scan Identitas"
-                                    class="w-48 h-auto rounded-lg shadow-md border border-gray-200">
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Gambar identitas</p>
-                        @elseif ($fileExtension == 'pdf')
-                            <div class="mt-2 flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 text-xl mr-2"></i>
-                                <span class="text-sm">Dokumen PDF (tidak dapat ditampilkan langsung)</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Silakan unduh PDF untuk melihatnya.</p>
-                        @else
-                            <p class="text-gray-600 mt-2 text-sm">Tipe file tidak didukung untuk pratinjau.</p>
-                        @endif
-                    </div>
-                @endif
-                {{-- AKHIR BAGIAN BARU --}}
+        <p class="mb-2"><strong>Tujuan Penggunaan:</strong></p>
+        <p class="mb-6 whitespace-pre-line">{{ $informationRequest->purpose }}</p>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <p><strong>Cara Mendapatkan Salinan:</strong></p>
+                <p>{{ $informationRequest->copy_method ?? '-' }}</p>
             </div>
-
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Detail Permohonan</h3>
-            <div class="space-y-4 text-sm mb-6">
-                <div>
-                    <p class="text-gray-500">Rincian Informasi Yang Dibutuhkan:</p>
-                    <p class="font-medium whitespace-pre-line">{{ $informationRequest->information_details }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Tujuan Penggunaan Informasi:</p>
-                    <p class="font-medium whitespace-pre-line">{{ $informationRequest->purpose }}</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-gray-500">Cara Mendapatkan Salinan:</p>
-                        <p class="font-medium">{{ $informationRequest->copy_method ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-500">Cara Pengambilan:</p>
-                        <p class="font-medium">{{ $informationRequest->retrieval_method ?? '-' }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-8 text-gray-700">
-                <p class="text-sm">Terima kasih atas permohonan Anda. Silakan simpan bukti ini sebagai referensi.</p>
-                <p class="text-xs mt-2">Status permohonan Anda saat ini: <span
-                        class="font-bold">{{ ucfirst($informationRequest->status) }}</span></p>
+            <div>
+                <p><strong>Cara Pengambilan:</strong></p>
+                <p>{{ $informationRequest->retrieval_method ?? '-' }}</p>
             </div>
         </div>
 
-        <div class="text-center mt-6 no-print">
+        {{-- Contoh moded canvas kosong --}}
+        <div class="mb-6">
+            <canvas id="modedCanvas" width="600" height="200" style="border:1px solid #ccc; width: 100%;"></canvas>
+        </div>
+
+        <p class="text-center text-gray-600 text-sm">Terima kasih atas permohonan Anda.</p>
+
+        <div class="text-center no-print mt-6">
             <button onclick="window.print()"
-                class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition">
-                <i class="fas fa-print mr-2"></i> Cetak Ulang
+                class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                <i class="fas fa-print mr-2"></i> Cetak Bukti
             </button>
-            <a href="{{ route('information-requests.show', $informationRequest->id) }}"
-                class="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg shadow transition ml-4">
-                <i class="fas fa-arrow-left mr-2"></i> Kembali
-            </a>
         </div>
     </div>
+
+    <script>
+        // Contoh script untuk moded canvas (kosong, bisa Anda modifikasi)
+        const canvas = document.getElementById('modedCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#333';
+        ctx.font = '20px Poppins, sans-serif';
+        ctx.fillText('Moded Canvas Placeholder', 20, 100);
+    </script>
 </body>
 
 </html>

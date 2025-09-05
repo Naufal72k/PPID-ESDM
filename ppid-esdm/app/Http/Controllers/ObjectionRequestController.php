@@ -33,7 +33,8 @@ class ObjectionRequestController extends Controller
 
             $filePath = 'uploads/objection_scans/' . $fileName;
 
-            $objectionRequest = ObjectionRequestV2::create([ // <-- Ubah ini
+            // Buat pengajuan keberatan terlebih dahulu
+            $objectionRequest = ObjectionRequestV2::create([
                 'full_name' => $validated['full_name'],
                 'identity_type' => $validated['identity_type'],
                 'identity_number' => $validated['identity_number'],
@@ -41,11 +42,17 @@ class ObjectionRequestController extends Controller
                 'phone' => $validated['phone'],
                 'reason' => $validated['reason'],
                 'additional_info' => $validated['additional_info'] ?? null,
+                'ticket_number' => ObjectionRequestV2::generateTicketNumber(),
             ]);
 
+            // Setelah model dibuat dan memiliki ID, generate unique_search_id dan simpan
+            $objectionRequest->unique_search_id = $objectionRequest->unique_search_id; // Memanggil accessor
+            $objectionRequest->save();
 
-            return redirect()->route('information-requests.objection.show', $objectionRequest)
-                ->with('success', 'Pengajuan keberatan berhasil dikirim!');
+            $request->session()->put('objectionRequest', $objectionRequest);
+
+            return redirect()->route('information-requests.objection.show')
+                ->with('success', 'Pengajuan keberatan berhasil dikirim! Kode Unik Anda: ' . $objectionRequest->unique_search_id);
 
         } catch (\Exception $e) {
             \Log::error('Gagal menyimpan pengajuan keberatan: ' . $e->getMessage());
@@ -53,15 +60,25 @@ class ObjectionRequestController extends Controller
         }
     }
 
-
-    public function show(ObjectionRequestV2 $objectionRequest)
+    public function showFromSession(Request $request)
     {
-        return view('information-requests.objection-show', compact('objectionRequest'));
+        $objectionRequest = $request->session()->get('objectionRequest');
+
+        if (!$objectionRequest) {
+            return redirect()->route('information-requests.create')->with('error', 'Data pengajuan keberatan tidak ditemukan.');
+        }
+
+        return view('information-requests.objection-show', ['objectionRequest' => $objectionRequest]);
     }
 
-
-    public function printProof(ObjectionRequestV2 $objectionRequest)
+    public function printProofFromSession(Request $request)
     {
-        return view('information-requests.objection-print-proof', compact('objectionRequest'));
+        $objectionRequest = $request->session()->get('objectionRequest');
+
+        if (!$objectionRequest) {
+            return redirect()->route('information-requests.create')->with('error', 'Data pengajuan keberatan tidak ditemukan untuk dicetak.');
+        }
+
+        return view('information-requests.objection-print-proof', ['objectionRequest' => $objectionRequest]);
     }
 }

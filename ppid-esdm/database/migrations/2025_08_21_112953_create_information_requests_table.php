@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->string('retrieval_method')->nullable();
             $table->string('status')->default('pending');
             $table->string('ticket_number')->unique()->nullable();
+            $table->text('admin_notes')->nullable();
+            $table->string('unique_search_id')->unique()->nullable(); // Kode unik pencarian
             $table->timestamps();
         });
     }

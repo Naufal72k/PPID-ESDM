@@ -108,6 +108,15 @@
             </div>
         </div>
 
+        <!-- Keterangan Admin (Baru) -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">
+                <i class="fas fa-comment-alt mr-2 text-purple-600"></i> Keterangan Admin
+            </h3>
+            <p class="text-gray-800 whitespace-pre-line">
+                {{ $objectionRequest->admin_notes ?? 'Belum ada keterangan dari admin.' }}</p>
+        </div>
+
         <!-- Riwayat Status -->
         <div class="bg-white rounded-xl shadow-md p-6 mb-6">
             <h4 class="font-medium text-gray-900 mb-2">Riwayat Status</h4>

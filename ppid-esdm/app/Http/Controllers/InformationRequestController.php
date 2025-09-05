@@ -42,6 +42,7 @@ class InformationRequestController extends Controller
 
             $filePath = 'uploads/identity_scans/' . $fileName;
 
+            // Buat permohonan terlebih dahulu
             $infoRequest = InformationRequest::create([
                 'full_name' => $validated['full_name'],
                 'address' => $validated['address'],
@@ -57,8 +58,14 @@ class InformationRequestController extends Controller
                 'ticket_number' => InformationRequest::generateTicketNumber(),
             ]);
 
-            return redirect()->route('information-requests.show', $infoRequest)
-                ->with('success', 'Permohonan berhasil! Nomor Tiket: ' . $infoRequest->ticket_number);
+            // Setelah model dibuat dan memiliki ID, generate unique_search_id dan simpan
+            $infoRequest->unique_search_id = $infoRequest->unique_search_id; // Memanggil accessor
+            $infoRequest->save();
+
+            $request->session()->put('infoRequest', $infoRequest);
+
+            return redirect()->route('information-requests.show')
+                ->with('success', 'Permohonan berhasil! Kode Unik Anda: ' . $infoRequest->unique_search_id);
 
         } catch (\Exception $e) {
             \Log::error('Gagal menyimpan permohonan informasi: ' . $e->getMessage());
@@ -66,13 +73,25 @@ class InformationRequestController extends Controller
         }
     }
 
-    public function show(InformationRequest $informationRequest)
+    public function showFromSession(Request $request)
     {
-        return view('information-requests.show', compact('informationRequest'));
+        $infoRequest = $request->session()->get('infoRequest');
+
+        if (!$infoRequest) {
+            return redirect()->route('information-requests.create')->with('error', 'Data permohonan tidak ditemukan.');
+        }
+
+        return view('information-requests.show', ['informationRequest' => $infoRequest]);
     }
 
-    public function printProof(InformationRequest $informationRequest)
+    public function printProofFromSession(Request $request)
     {
-        return view('information-requests.print-proof', compact('informationRequest'));
+        $infoRequest = $request->session()->get('infoRequest');
+
+        if (!$infoRequest) {
+            return redirect()->route('information-requests.create')->with('error', 'Data permohonan tidak ditemukan untuk dicetak.');
+        }
+
+        return view('information-requests.print-proof', ['informationRequest' => $infoRequest]);
     }
 }

@@ -1,15 +1,11 @@
-<!-- New File: MultipleFiles/information-requests/objection-print-proof.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bukti Pengajuan Keberatan - ID {{ $objectionRequest->id }}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bukti Pengajuan Keberatan - {{ $objectionRequest->unique_search_id }}</title> {{-- Ubah title --}}
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -17,126 +13,115 @@
             color: #333;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
         @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-
             .no-print {
                 display: none !important;
-            }
-
-            img {
-                display: block !important;
-                visibility: visible !important;
             }
         }
     </style>
 </head>
 
-<body onload="window.print()" class="font-poppins">
-    <div class="container mx-auto p-6">
-        <div class="text-center mb-8">
-            <img src="https://via.placeholder.com/90" alt="Logo Dinas ESDM NTB"
-                class="h-20 w-20 mx-auto mb-4 rounded-full">
-            <h1 class="text-2xl font-bold text-gray-800">BUKTI PENGAJUAN KEBERATAN INFORMASI PUBLIK</h1>
-            <h2 class="text-xl font-semibold text-gray-700">Dinas Energi dan Sumber Daya Mineral Provinsi Nusa Tenggara
-                Barat</h2>
-            <p class="text-sm text-gray-600">PPID Dinas ESDM NTB</p>
+<body class="p-6 bg-gray-50">
+    {{-- Kolom Pencarian (tidak dicetak) --}}
+    <div class="no-print max-w-md mx-auto mb-6">
+        <form action="{{ route('user.status.search') }}" method="POST" class="flex gap-2">
+            @csrf
+            <input type="text" name="unique_search_id" placeholder="Masukkan kode unik Anda" {{-- Ubah placeholder --}}
+                class="flex-grow border border-gray-300 rounded px-3 py-2" required />
+            <button type="submit"
+                class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">Cari</button>
+        </form>
+    </div>
+
+    @php
+        // Fungsi ini tidak lagi relevan untuk tampilan unique_search_id, tetapi tetap ada jika ticket_number masih ingin diformat
+        function formatTicketNumber($ticketNumber)
+        {
+            if (str_starts_with($ticketNumber, 'OBJECTION-')) {
+                return 'Keberatan-' . substr($ticketNumber, strlen('OBJECTION-'));
+            } elseif (str_starts_with($ticketNumber, 'PPID-')) {
+                return 'Informasi-' . substr($ticketNumber, strlen('PPID-'));
+            }
+            return $ticketNumber;
+        }
+    @endphp
+
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
+        <h1 class="text-2xl font-bold mb-4 text-center">BUKTI PENGAJUAN KEBERATAN INFORMASI PUBLIK</h1>
+
+        {{-- <p class="mb-2 font-semibold">Nomor Tiket Keberatan: <span
+                class="text-purple-600">{{ formatTicketNumber($objectionRequest->ticket_number) }}</span></p> --}}
+        {{-- Tampilkan Kode Unik untuk Pencarian --}}
+        <p class="mb-2 font-semibold">Kode Unik Pencarian: <span
+                class="text-purple-600 break-all">{{ $objectionRequest->unique_search_id }}</span></p>
+        <p class="mb-6 text-gray-600">Tanggal Pengajuan: {{ $objectionRequest->created_at->format('d M Y H:i') }}</p>
+
+        <h2 class="text-xl font-semibold mb-3">Data Pemohon</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+                <p class="font-medium">Nama Lengkap</p>
+                <p>{{ $objectionRequest->full_name }}</p>
+            </div>
+            <div>
+                <p class="font-medium">Jenis Identitas</p>
+                <p>{{ $objectionRequest->identity_type }}</p>
+            </div>
+            <div>
+                <p class="font-medium">Nomor Identitas</p>
+                <p>{{ $objectionRequest->identity_number }}</p>
+            </div>
+            <div>
+                <p class="font-medium">Telepon/HP</p>
+                <p>{{ $objectionRequest->phone }}</p>
+            </div>
+            @if ($objectionRequest->identity_scan_path)
+                <div class="md:col-span-2">
+                    <p class="font-medium">Scan Identitas</p>
+                    @php
+                        $filePath = asset($objectionRequest->identity_scan_path);
+                        $fileExtension = pathinfo($objectionRequest->identity_scan_path, PATHINFO_EXTENSION);
+                    @endphp
+                    @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                        <img src="{{ $filePath }}" alt="Scan Identitas" class="w-48 rounded shadow" />
+                    @elseif ($fileExtension == 'pdf')
+                        <p>Dokumen PDF (silakan unduh untuk melihatnya)</p>
+                        <a href="{{ $filePath }}" target="_blank" class="text-purple-600 underline">Unduh PDF</a>
+                    @else
+                        <p>Tipe file tidak didukung untuk pratinjau.</p>
+                    @endif
+                </div>
+            @endif
         </div>
 
-        <div class="bg-white border border-gray-300 rounded-lg shadow-sm p-6 mb-6">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-                <p class="text-lg font-semibold">ID Keberatan: <span
-                        class="text-purple-600">{{ $objectionRequest->id }}</span></p>
-                <p class="text-sm text-gray-600">Tanggal Pengajuan:
-                    {{ $objectionRequest->created_at->format('d M Y H:i') }}</p>
-            </div>
+        <h2 class="text-xl font-semibold mb-3">Detail Keberatan</h2>
+        <p class="mb-4 whitespace-pre-line">{{ $objectionRequest->reason }}</p>
 
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Data Pemohon</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
-                <div>
-                    <p class="text-gray-500">Nama Lengkap:</p>
-                    <p class="font-medium">{{ $objectionRequest->full_name }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Jenis Identitas:</p>
-                    <p class="font-medium">{{ $objectionRequest->identity_type }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Nomor Identitas:</p>
-                    <p class="font-medium">{{ $objectionRequest->identity_number }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Telepon/HP:</p>
-                    <p class="font-medium">{{ $objectionRequest->phone }}</p>
-                </div>
+        <p class="mb-6 whitespace-pre-line">{{ $objectionRequest->additional_info ?? '-' }}</p>
 
-                @if ($objectionRequest->identity_scan_path)
-                    <div class="md:col-span-2">
-                        <p class="text-gray-500">Scan Identitas:</p>
-                        @php
-                            $filePath = asset($objectionRequest->identity_scan_path);
-                            $fileExtension = pathinfo($objectionRequest->identity_scan_path, PATHINFO_EXTENSION);
-                        @endphp
-
-                        @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                            <div class="mt-2">
-                                <img src="{{ $filePath }}" alt="Scan Identitas"
-                                    class="w-48 h-auto rounded-lg shadow-md border border-gray-200">
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Gambar identitas</p>
-                        @elseif ($fileExtension == 'pdf')
-                            <div class="mt-2 flex items-center">
-                                <i class="fas fa-file-pdf text-red-500 text-xl mr-2"></i>
-                                <span class="text-sm">Dokumen PDF (tidak dapat ditampilkan langsung)</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Silakan unduh PDF untuk melihatnya.</p>
-                        @else
-                            <p class="text-gray-600 mt-2 text-sm">Tipe file tidak didukung untuk pratinjau.</p>
-                        @endif
-                    </div>
-                @endif
-            </div>
-
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Detail Keberatan</h3>
-            <div class="space-y-4 text-sm mb-6">
-                <div>
-                    <p class="text-gray-500">Alasan Pengajuan Keberatan:</p>
-                    <p class="font-medium whitespace-pre-line">{{ $objectionRequest->reason }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500">Keterangan Tambahan:</p>
-                    <p class="font-medium whitespace-pre-line">{{ $objectionRequest->additional_info ?? '-' }}</p>
-                </div>
-            </div>
-
-            <div class="text-center mt-8 text-gray-700">
-                <p class="text-sm">Terima kasih atas pengajuan keberatan Anda. Silakan simpan bukti ini sebagai
-                    referensi.</p>
-                <p class="text-xs mt-2">Status pengajuan keberatan Anda saat ini: <span
-                        class="font-bold">{{ ucfirst($objectionRequest->status) }}</span></p>
-            </div>
+        {{-- Contoh moded canvas kosong --}}
+        <div class="mb-6">
+            <canvas id="modedCanvas" width="600" height="200" style="border:1px solid #ccc; width: 100%;"></canvas>
         </div>
 
-        <div class="text-center mt-6 no-print">
+        <p class="text-center text-gray-600 text-sm">Terima kasih atas pengajuan keberatan Anda.</p>
+
+        <div class="text-center no-print mt-6">
             <button onclick="window.print()"
-                class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow transition">
-                <i class="fas fa-print mr-2"></i> Cetak Ulang
+                class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition">
+                <i class="fas fa-print mr-2"></i> Cetak Bukti
             </button>
-            <a href="{{ route('information-requests.objection.show', $objectionRequest->id) }}"
-                class="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg shadow transition ml-4">
-                <i class="fas fa-arrow-left mr-2"></i> Kembali
-            </a>
         </div>
     </div>
+
+    <script>
+        const canvas = document.getElementById('modedCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#f9f5ff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#6b21a8';
+        ctx.font = '20px Poppins, sans-serif';
+        ctx.fillText('Moded Canvas Placeholder', 20, 100);
+    </script>
 </body>
 
 </html>
