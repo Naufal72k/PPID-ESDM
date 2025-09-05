@@ -100,7 +100,7 @@
                         <div class="md:col-span-2">
                             <p class="text-gray-500 text-sm">Berkas Identitas</p>
                             @php
-                                $filePath = asset($informationRequest->identity_scan_path);
+                                $filePath = asset($informationRequest->identity_scan_path); // Gunakan asset() untuk public_path
                                 $fileExtension = pathinfo($informationRequest->identity_scan_path, PATHINFO_EXTENSION);
                             @endphp
                             @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
@@ -174,7 +174,8 @@
                         class="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg shadow transition">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali ke Pencarian Status
                     </a>
-                    <a href="{{ route('user.status.print-request-proof') }}" target="_blank"
+                    <a href="{{ route('user.status.print-request-proof', ['unique_search_id' => $informationRequest->unique_search_id]) }}"
+                        target="_blank"
                         class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition ml-4">
                         <i class="fas fa-print mr-2"></i> Cetak Bukti Permohonan
                     </a>

@@ -1,5 +1,5 @@
 <!-- FileName: MultipleFiles/table.blade.php -->
-<div class="overflow-x-auto">
+<div class="">
     <table class="min-w-full bg-white">
         <thead>
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -36,7 +36,7 @@
                                 <i class="fas fa-eye"></i>
                             </a>
 
-                            <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                            <div class="w-4 mr-2 transform hover:text-purple-500 ">
                                 <div x-data="{ open: false, selectedStatus: '{{ $request->status }}', adminNotes: '{{ $request->admin_notes ?? '' }}' }" class="relative inline-block text-left">
                                     <button @click="open = !open" type="button"
                                         class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

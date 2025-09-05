@@ -177,7 +177,8 @@
                         class="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg shadow transition">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali ke Pencarian Status
                     </a>
-                    <a href="{{ route('user.status.print-objection-proof') }}" target="_blank"
+                    <a href="{{ route('user.status.print-objection-proof', ['unique_search_id' => $objectionRequest->unique_search_id]) }}"
+                        target="_blank"
                         class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow transition ml-4">
                         <i class="fas fa-print mr-2"></i> Cetak Bukti Pengajuan Keberatan
                     </a>

@@ -46,8 +46,8 @@ class ObjectionRequestController extends Controller
             ]);
 
             // Setelah model dibuat dan memiliki ID, generate unique_search_id dan simpan
-            $objectionRequest->unique_search_id = $objectionRequest->unique_search_id; // Memanggil accessor
-            $objectionRequest->save();
+            // Panggil metode baru untuk menghasilkan dan menyimpan unique_search_id
+            $objectionRequest->generateAndSaveUniqueSearchId();
 
             $request->session()->put('objectionRequest', $objectionRequest);
 

@@ -39,9 +39,11 @@ class UserStatusController extends Controller
         // Jika tidak ditemukan sama sekali
         return redirect()->route('user.status.index')->with('error', 'Kode unik tidak ditemukan.');
     }
+
     public function printRequestProof($unique_search_id)
     {
-        $informationRequest = InformationRequest::where('unique_search_id', $unique_search_id);
+        // Ambil model berdasarkan unique_search_id dari database
+        $informationRequest = InformationRequest::where('unique_search_id', $unique_search_id)->first();
 
         if (!$informationRequest) {
             return redirect()->route('user.status.index')->with('error', 'Data permohonan tidak ditemukan untuk dicetak.');
@@ -52,6 +54,7 @@ class UserStatusController extends Controller
 
     public function printObjectionProof($unique_search_id)
     {
+        // Ambil model berdasarkan unique_search_id dari database
         $objectionRequest = ObjectionRequestV2::where('unique_search_id', $unique_search_id)->first();
 
         if (!$objectionRequest) {
@@ -60,5 +63,4 @@ class UserStatusController extends Controller
 
         return view('information-requests.objection-print-proof', compact('objectionRequest'));
     }
-
 }

@@ -1,4 +1,3 @@
-<!-- New File: MultipleFiles/admin/objections/index.blade.php -->
 @extends('admin.layouts.app')
 
 @section('title', 'Daftar Pengajuan Keberatan')
@@ -42,7 +41,7 @@
                 </div>
             </form>
         </div>
-        <div class="overflow-x-auto">
+        <div class="">
             <table class="min-w-full bg-white">
                 <thead>
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -71,10 +70,10 @@
                             <td class="py-3 px-6 text-center">
                                 <div class="flex item-center justify-center">
                                     <a href="{{ route('admin.objections.show', $objection->id) }}"
-                                        class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                                        class="w-4 mr-2 transform hover:text-blue-500 ">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                                    <div class="w-4 mr-2 transform hover:text-purple-500">
                                         <div x-data="{ open: false, selectedStatus: '{{ $objection->status }}', adminNotes: '{{ $objection->admin_notes ?? '' }}' }" class="relative inline-block text-left">
                                             <button @click="open = !open" type="button"
                                                 class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -90,7 +89,7 @@
                                                 x-transition:leave="transition ease-in duration-75"
                                                 x-transition:leave-start="transform opacity-100 scale-100"
                                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                                class="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                                class="fixed right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[1000]">
                                                 <div class="py-1" role="menu" aria-orientation="vertical"
                                                     aria-labelledby="options-menu-{{ $objection->id }}">
                                                     <form
@@ -98,13 +97,13 @@
                                                         method="POST" class="p-4">
                                                         @csrf
                                                         @method('PUT')
-                                                        <div class="mb-4">
+                                                        <div class="mb-4 relative">
                                                             <label for="status-objection-{{ $objection->id }}"
                                                                 class="block text-sm font-medium text-gray-700">Ubah
                                                                 Status</label>
                                                             <select id="status-objection-{{ $objection->id }}"
                                                                 name="status" x-model="selectedStatus"
-                                                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md relative z-[1000]">
                                                                 <option value="pending">Pending</option>
                                                                 <option value="processed">Diproses</option>
                                                                 <option value="completed">Selesai</option>
@@ -128,12 +127,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- Tombol Hapus --}}
                                     <form action="{{ route('admin.objections.destroy', $objection->id) }}" method="POST"
                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan keberatan ini?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-4 transform hover:text-red-500 hover:scale-110">
+                                        <button type="submit" class="w-4 transform hover:text-red-500 ">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

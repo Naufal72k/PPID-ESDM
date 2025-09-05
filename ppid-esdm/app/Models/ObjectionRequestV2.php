@@ -23,15 +23,15 @@ class ObjectionRequestV2 extends Model
         'status',
         'admin_notes',
         'ticket_number',
-        'unique_search_id'
+        // Hapus 'unique_search_id' dari fillable
     ];
 
-    // Generate kode unik pendek (max 20 karakter) untuk pencarian
-    public function getUniqueSearchIdAttribute()
-    {
-        $encrypted = Crypt::encryptString($this->id . '-' . $this->ticket_number);
-        return substr(str_replace(['/', '+', '='], '', base64_encode($encrypted)), 0, 20);
-    }
+    // Hapus accessor getUniqueSearchIdAttribute
+    // public function getUniqueSearchIdAttribute()
+    // {
+    //     $encrypted = Crypt::encryptString($this->id . '-' . $this->ticket_number);
+    //     return substr(str_replace(['/', '+', '='], '', base64_encode($encrypted)), 0, 20);
+    // }
 
     // Generate nomor tiket otomatis
     public static function generateTicketNumber()
@@ -43,5 +43,17 @@ class ObjectionRequestV2 extends Model
 
         $number = $latest ? (int) str_replace($prefix, '', $latest->ticket_number) + 1 : 1;
         return $prefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+    }
+
+    // Tambahkan metode untuk menghasilkan unique_search_id setelah model disimpan
+    public function generateAndSaveUniqueSearchId()
+    {
+        // Pastikan model sudah memiliki ID
+        if (!$this->id) {
+            throw new \Exception("Model must have an ID to generate unique_search_id.");
+        }
+        $encrypted = Crypt::encryptString($this->id . '-' . $this->ticket_number);
+        $this->unique_search_id = substr(str_replace(['/', '+', '='], '', base64_encode($encrypted)), 0, 20);
+        $this->save();
     }
 }

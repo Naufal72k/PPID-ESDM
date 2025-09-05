@@ -82,7 +82,9 @@
                         $fileExtension = pathinfo($objectionRequest->identity_scan_path, PATHINFO_EXTENSION);
                     @endphp
                     @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                        <img src="{{ $filePath }}" alt="Scan Identitas" class="w-48 rounded shadow" />
+                        <div class="mt-2">
+                            <img src="{{ $filePath }}" alt="Scan Identitas" class="w-48 rounded shadow" />
+                        </div>
                     @elseif ($fileExtension == 'pdf')
                         <p>Dokumen PDF (silakan unduh untuk melihatnya)</p>
                         <a href="{{ $filePath }}" target="_blank" class="text-purple-600 underline">Unduh PDF</a>

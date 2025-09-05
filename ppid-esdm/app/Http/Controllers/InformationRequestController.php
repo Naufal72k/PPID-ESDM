@@ -59,8 +59,8 @@ class InformationRequestController extends Controller
             ]);
 
             // Setelah model dibuat dan memiliki ID, generate unique_search_id dan simpan
-            $infoRequest->unique_search_id = $infoRequest->unique_search_id; // Memanggil accessor
-            $infoRequest->save();
+            // Panggil metode baru untuk menghasilkan dan menyimpan unique_search_id
+            $infoRequest->generateAndSaveUniqueSearchId();
 
             $request->session()->put('infoRequest', $infoRequest);
 
