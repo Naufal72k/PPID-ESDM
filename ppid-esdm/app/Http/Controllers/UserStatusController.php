@@ -10,7 +10,17 @@ class UserStatusController extends Controller
 {
     public function index()
     {
-        return view('user.status.index');
+        // Ambil permohonan informasi dengan status 'completed' atau 'rejected' dengan pagination 8 per halaman
+        $completedRejectedInformationRequests = InformationRequest::whereIn('status', ['completed', 'rejected'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(8, ['*'], 'info_page');
+
+        // Ambil pengajuan keberatan dengan status 'completed' atau 'rejected' dengan pagination 8 per halaman
+        $completedRejectedObjectionRequests = ObjectionRequestV2::whereIn('status', ['completed', 'rejected'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(8, ['*'], 'objection_page');
+
+        return view('user.status.index', compact('completedRejectedInformationRequests', 'completedRejectedObjectionRequests'));
     }
 
     public function search(Request $request)
@@ -25,7 +35,6 @@ class UserStatusController extends Controller
         $informationRequest = InformationRequest::where('unique_search_id', $uniqueSearchId)->first();
 
         if ($informationRequest) {
-            // Langsung return view dengan data
             return view('user.status.show-request', compact('informationRequest'));
         }
 
@@ -36,13 +45,11 @@ class UserStatusController extends Controller
             return view('user.status.show-objection', compact('objectionRequest'));
         }
 
-        // Jika tidak ditemukan sama sekali
         return redirect()->route('user.status.index')->with('error', 'Kode unik tidak ditemukan.');
     }
 
     public function printRequestProof($unique_search_id)
     {
-        // Ambil model berdasarkan unique_search_id dari database
         $informationRequest = InformationRequest::where('unique_search_id', $unique_search_id)->first();
 
         if (!$informationRequest) {
@@ -54,7 +61,6 @@ class UserStatusController extends Controller
 
     public function printObjectionProof($unique_search_id)
     {
-        // Ambil model berdasarkan unique_search_id dari database
         $objectionRequest = ObjectionRequestV2::where('unique_search_id', $unique_search_id)->first();
 
         if (!$objectionRequest) {
