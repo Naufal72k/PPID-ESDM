@@ -23,15 +23,7 @@
 
 <body class="p-6 bg-gray-50">
     {{-- Kolom Pencarian (tidak dicetak) --}}
-    <div class="no-print max-w-md mx-auto mb-6">
-        <form action="{{ route('user.status.search') }}" method="POST" class="flex gap-2">
-            @csrf
-            <input type="text" name="unique_search_id" placeholder="Masukkan kode unik Anda" {{-- Ubah placeholder --}}
-                class="flex-grow border border-gray-300 rounded px-3 py-2" required />
-            <button type="submit"
-                class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">Cari</button>
-        </form>
-    </div>
+
 
     @php
         // Fungsi ini tidak lagi relevan untuk tampilan unique_search_id, tetapi tetap ada jika ticket_number masih ingin diformat
@@ -101,9 +93,7 @@
         <p class="mb-6 whitespace-pre-line">{{ $objectionRequest->additional_info ?? '-' }}</p>
 
         {{-- Contoh moded canvas kosong --}}
-        <div class="mb-6">
-            <canvas id="modedCanvas" width="600" height="200" style="border:1px solid #ccc; width: 100%;"></canvas>
-        </div>
+
 
         <p class="text-center text-gray-600 text-sm">Terima kasih atas pengajuan keberatan Anda.</p>
 

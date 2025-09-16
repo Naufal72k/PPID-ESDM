@@ -1,4 +1,3 @@
-<!-- FileName: MultipleFiles/dashboard.blade.php -->
 @extends('admin.layouts.app') {{-- Pastikan ini mengarah ke layout baru --}}
 
 @section('title', 'Dashboard Admin')
@@ -11,7 +10,7 @@
                 <div>
                     <p class="text-gray-500 text-sm">Total Permohonan</p>
                     <h3 class="text-2xl font-bold mt-1">{{ $totalRequests }}</h3>
-                    {{-- Anda bisa menambahkan logika persentase jika ada data historis --}}
+
                     <p class="text-green-500 text-sm mt-2">
                         <i class="fas fa-arrow-up mr-1"></i>Data terbaru
                     </p>

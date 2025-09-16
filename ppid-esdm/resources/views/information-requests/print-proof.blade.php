@@ -23,18 +23,10 @@
 
 <body class="p-6 bg-gray-50">
     {{-- Kolom Pencarian (tidak dicetak) --}}
-    <div class="no-print max-w-md mx-auto mb-6">
-        <form action="{{ route('user.status.search') }}" method="POST" class="flex gap-2">
-            @csrf
-            <input type="text" name="unique_search_id" placeholder="Masukkan kode unik Anda" {{-- Ubah placeholder --}}
-                class="flex-grow border border-gray-300 rounded px-3 py-2" required />
-            <button type="submit"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Cari</button>
-        </form>
-    </div>
+
 
     @php
-        // Fungsi ini tidak lagi relevan untuk tampilan unique_search_id, tetapi tetap ada jika ticket_number masih ingin diformat
+
         function formatTicketNumber($ticketNumber)
         {
             if (str_starts_with($ticketNumber, 'OBJECTION-')) {
@@ -49,9 +41,7 @@
     <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
         <h1 class="text-2xl font-bold mb-4 text-center">BUKTI PERMOHONAN INFORMASI PUBLIK</h1>
 
-        {{-- <p class="mb-2 font-semibold">Nomor Tiket: <span
-                class="text-blue-600">{{ formatTicketNumber($informationRequest->ticket_number) }}</span></p> --}}
-        {{-- Tampilkan Kode Unik untuk Pencarian --}}
+
         <p class="mb-2 font-semibold">Kode Unik Pencarian: <span
                 class="text-blue-600 break-all">{{ $informationRequest->unique_search_id }}</span></p>
         <p class="mb-6 text-gray-600">Tanggal Pengajuan: {{ $informationRequest->created_at->format('d M Y H:i') }}</p>
@@ -114,10 +104,7 @@
             </div>
         </div>
 
-        {{-- Contoh moded canvas kosong --}}
-        <div class="mb-6">
-            <canvas id="modedCanvas" width="600" height="200" style="border:1px solid #ccc; width: 100%;"></canvas>
-        </div>
+
 
         <p class="text-center text-gray-600 text-sm">Terima kasih atas permohonan Anda.</p>
 

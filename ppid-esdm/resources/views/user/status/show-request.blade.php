@@ -1,203 +1,23 @@
-    <!DOCTYPE html>
-    <html lang="id">
+@extends('layouts.app')
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Detail Permohonan Informasi - PPID ESDM NTB</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-            rel="stylesheet">
-        <style>
-            .font-poppins {
-                font-family: 'Poppins', sans-serif;
-            }
+@section('title', 'Detail Permohonan')
 
-            .status-completed {
-                background-color: #bfdbfe;
-                color: #1d4ed8;
-            }
+@section('content')
+    <div class="max-w-4xl mx-auto p-6 bg-white rounded shadow">
+        <h2 class="text-2xl font-bold mb-4">Detail Permohonan Informasi</h2>
 
-            .status-rejected {
-                background-color: #fee2e2;
-                color: #dc2626;
-            }
-        </style>
-    </head>
+        <p><strong>Nama Pengaju:</strong> {{ $informationRequest->full_name }}</p>
+        <p><strong>Rincian Informasi Yang Dibutuhkan:</strong></p>
+        <p class="whitespace-pre-line mb-4">{{ $informationRequest->information_details }}</p>
 
-    <body class="font-poppins bg-gray-100 min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-8">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row items-center justify-between">
-                    <div class="flex items-center mb-6 md:mb-0">
-                        <img src="/images/logo-esdm.png" alt=""
-                            class="h-20 w-20 mr-5 rounded-full shadow-lg object-cover">
-                        <div>
-                            <h1 class="text-3xl font-extrabold leading-tight">Dinas Energi dan Sumber Daya Mineral</h1>
-                            <p class="text-xl font-semibold opacity-90">Provinsi Nusa Tenggara Barat</p>
-                        </div>
-                    </div>
-                    <div class="bg-white text-blue-900 px-6 py-3 rounded-xl shadow-lg text-center">
-                        <h2 class="text-2xl font-bold">Detail Permohonan Informasi</h2>
-                        <p class="text-base text-gray-700">PPID Dinas ESDM NTB</p>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <p><strong>Tujuan Penggunaan Informasi:</strong></p>
+        <p class="whitespace-pre-line mb-4">{{ $informationRequest->purpose }}</p>
 
-        <!-- Main Content -->
-        <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="max-w-4xl mx-auto">
-                <!-- Status & Ticket Number -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
-                    <div class="p-6 bg-gradient-to-r from-purple-700 to-purple-600 text-white">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                            <div>
-                                <h2 class="text-2xl font-bold">Permohonan Informasi</h2>
-                                {{-- <p class="opacity-90">No. Tiket: <span
-                                        class="font-bold">{{ $informationRequest->ticket_number }}</span></p> --}}
-                                {{-- Tampilkan Kode Unik --}}
-                                <p class="opacity-90 text-sm mt-1">Kode Unik Pencarian: <span
-                                        class="font-bold text-yellow-200 break-all">{{ $informationRequest->unique_search_id }}</span>
-                                </p>
-                            </div>
-                            <span
-                                class="mt-2 md:mt-0 px-4 py-2 rounded-full text-sm font-semibold status-{{ strtolower($informationRequest->status) }}">
-                                {{ ucfirst($informationRequest->status) }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
-                        <p class="text-sm text-gray-600">Tanggal Pengajuan:
-                            {{ $informationRequest->created_at->format('d M Y H:i') }}</p>
-                    </div>
-                </div>
+        <p><strong>Status:</strong> <span
+                class="status-{{ strtolower($informationRequest->status) }}">{{ ucfirst($informationRequest->status) }}</span>
+        </p>
 
-                <!-- Data Pemohon -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">
-                        <i class="fas fa-user-circle mr-2 text-purple-600"></i> Data Pemohon
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="text-gray-500 text-sm">Nama Lengkap</p>
-                            <p class="text-gray-800 font-medium">{{ $informationRequest->full_name }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Jenis Identitas</p>
-                            <p class="text-gray-800 font-medium">{{ $informationRequest->identity_type }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Nomor Identitas</p>
-                            <p class="text-gray-800 font-medium">{{ $informationRequest->identity_number }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Telepon/HP</p>
-                            <p class="text-gray-800 font-medium">{{ $informationRequest->phone }}</p>
-                        </div>
-                        <div class="md:col-span-2">
-                            <p class="text-gray-500 text-sm">Berkas Identitas</p>
-                            @php
-                                $filePath = asset($informationRequest->identity_scan_path); // Gunakan asset() untuk public_path
-                                $fileExtension = pathinfo($informationRequest->identity_scan_path, PATHINFO_EXTENSION);
-                            @endphp
-                            @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                                <div class="mt-2">
-                                    <img src="{{ $filePath }}" alt="Scan Identitas"
-                                        class="w-48 h-auto rounded-lg shadow-md border border-gray-200">
-                                </div>
-                                <a href="{{ $filePath }}" target="_blank"
-                                    class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
-                                    <i class="fas fa-eye mr-2"></i> Lihat Gambar Ukuran Penuh
-                                </a>
-                            @elseif ($fileExtension == 'pdf')
-                                <div class="mt-2 flex items-center">
-                                    <i class="fas fa-file-pdf text-red-500 text-4xl mr-2"></i>
-                                    <span>Dokumen PDF</span>
-                                </div>
-                                <a href="{{ $filePath }}" target="_blank"
-                                    class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
-                                    <i class="fas fa-download mr-2"></i> Unduh Dokumen PDF
-                                </a>
-                            @else
-                                <p class="text-gray-600 mt-2">Tipe file tidak didukung untuk pratinjau.</p>
-                                <a href="{{ $filePath }}" target="_blank"
-                                    class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
-                                    <i class="fas fa-external-link-alt mr-2"></i> Buka Dokumen
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detail Permohonan -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">
-                        <i class="fas fa-info-circle mr-2 text-purple-600"></i> Rincian Permohonan
-                    </h3>
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-gray-500 text-sm">Detail Informasi yang Diminta</p>
-                            <p class="text-gray-800 whitespace-pre-line">{{ $informationRequest->information_details }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Tujuan Penggunaan Informasi</p>
-                            <p class="text-gray-800 whitespace-pre-line">{{ $informationRequest->purpose }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Metode Penyalinan</p>
-                            <p class="text-gray-800">{{ $informationRequest->copy_method }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm">Metode Pengambilan</p>
-                            <p class="text-gray-800">{{ $informationRequest->retrieval_method }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Keterangan Admin -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">
-                        <i class="fas fa-comment-alt mr-2 text-purple-600"></i> Keterangan Admin
-                    </h3>
-                    <p class="text-gray-800 whitespace-pre-line">
-                        {{ $informationRequest->admin_notes ?? 'Belum ada keterangan dari admin.' }}
-                    </p>
-                </div>
-
-                <!-- Tombol Kembali -->
-                <div class="text-center">
-                    <a href="{{ route('user.status.index') }}"
-                        class="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg shadow transition">
-                        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Pencarian Status
-                    </a>
-                    <a href="{{ route('user.status.print-request-proof', ['unique_search_id' => $informationRequest->unique_search_id]) }}"
-                        target="_blank"
-                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition ml-4">
-                        <i class="fas fa-print mr-2"></i> Cetak Bukti Permohonan
-                    </a>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-white py-8">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                    <div class="mb-4 md:mb-0">
-                        <h3 class="text-xl font-bold">PPID Dinas ESDM NTB</h3>
-                        <p class="text-sm opacity-80">Pejabat Pengelola Informasi dan Dokumentasi</p>
-                    </div>
-                    <div class="text-sm opacity-80">
-                        <p>© {{ date('Y') }} Dinas Energi dan Sumber Daya Mineral Provinsi NTB</p>
-                        <p>Email: ppid.esdmntb@example.com | Telp: (0370) 1234567</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </body>
-
-    </html>
+        <a href="{{ route('user.status.index') }}"
+            class="inline-block mt-6 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Kembali</a>
+    </div>
+@endsection

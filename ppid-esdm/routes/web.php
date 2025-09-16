@@ -34,15 +34,18 @@ Route::prefix('information-requests')->name('information-requests.')->group(func
 
 // Rute baru untuk status user (ini akan menjadi halaman pencarian utama)
 Route::prefix('status')->name('user.status.')->group(function () {
+
     Route::get('/', [UserStatusController::class, 'index'])->name('index');
     Route::post('/search', [UserStatusController::class, 'search'])->name('search');
-    // Route::get('/show-request', [UserStatusController::class, 'showRequest'])->name('show-request'); // Ini tidak lagi diperlukan karena search langsung me-return view
-    // Route::get('/show-objection', [UserStatusController::class, 'showObjection'])->name('show-objection'); // Ini juga tidak lagi diperlukan
 
-    // Tambahkan route untuk cetak bukti permohonan dan keberatan DENGAN parameter
+    Route::get('/request/{informationRequest}', [UserStatusController::class, 'showRequest'])->name('show-request');
+    Route::get('/objection/{objectionRequest}', [UserStatusController::class, 'showObjection'])->name('show-objection');
+
     Route::get('/print-request-proof/{unique_search_id}', [UserStatusController::class, 'printRequestProof'])->name('print-request-proof');
     Route::get('/print-objection-proof/{unique_search_id}', [UserStatusController::class, 'printObjectionProof'])->name('print-objection-proof');
+
 });
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
