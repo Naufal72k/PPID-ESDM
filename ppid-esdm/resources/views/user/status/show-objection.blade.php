@@ -3,69 +3,68 @@
 @section('title', 'Detail Pengajuan Keberatan')
 
 @section('content')
-    <div class="max-w-4xl mx-auto p-6 bg-white rounded shadow">
-        <h2 class="text-2xl font-bold mb-4">Detail Pengajuan Keberatan</h2>
+    <div class="max-w-3xl mx-auto p-8 bg-white rounded-2xl shadow-md border border-gray-100">
+        <!-- Judul -->
+        <h2 class="text-3xl font-bold text-blue-700 mb-8 text-center">
+            Detail Pengajuan Keberatan
+        </h2>
 
-        <div class="mb-4">
-            <strong>Nomor Tiket:</strong> {{ $objectionRequest->ticket_number }}
+        <!-- Informasi Utama -->
+        <div class="space-y-5">
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="font-medium text-gray-600">Nomor Tiket:</span>
+                <span class="text-gray-900 font-semibold">{{ $objectionRequest->ticket_number }}</span>
+            </div>
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="font-medium text-gray-600">Nama Lengkap:</span>
+                <span class="text-gray-900">{{ $objectionRequest->full_name }}</span>
+            </div>
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="font-medium text-gray-600">Jenis Identitas:</span>
+                <span class="text-gray-900">{{ $objectionRequest->identity_type }}</span>
+            </div>
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="font-medium text-gray-600">Status:</span>
+                <span
+                    class="px-3 py-1 rounded-full text-sm font-semibold
+                        @if (strtolower($objectionRequest->status) == 'selesai') bg-green-100 text-green-700
+                        @elseif(strtolower($objectionRequest->status) == 'pending') bg-yellow-100 text-yellow-700
+                        @elseif(strtolower($objectionRequest->status) == 'ditolak') bg-red-100 text-red-700
+                        @else bg-gray-100 text-gray-700 @endif">
+                    {{ ucfirst($objectionRequest->status) }}
+                </span>
+            </div>
         </div>
 
-        <div class="mb-4">
-            <strong>Nama Lengkap:</strong> {{ $objectionRequest->full_name }}
+        <!-- Detail Tambahan -->
+        <div class="mt-10 space-y-6">
+            <div>
+                <h3 class="font-semibold text-gray-700 mb-1">Alasan Pengajuan Keberatan:</h3>
+                <p class="text-gray-900 whitespace-pre-line bg-gray-50 p-3 rounded-md">
+                    {{ $objectionRequest->reason }}
+                </p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-700 mb-1">Keterangan Tambahan:</h3>
+                <p class="text-gray-900 whitespace-pre-line bg-gray-50 p-3 rounded-md">
+                    {{ $objectionRequest->additional_info ?? '-' }}
+                </p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-700 mb-1">Keterangan Admin:</h3>
+                <p class="text-gray-900 bg-gray-50 p-3 rounded-md">
+                    {{ $objectionRequest->admin_notes ?? '-' }}
+                </p>
+            </div>
+
+
         </div>
 
-        <div class="mb-4">
-            <strong>Jenis Identitas:</strong> {{ $objectionRequest->identity_type }}
-        </div>
-
-        <div class="mb-4">
-            <strong>Nomor Identitas:</strong> {{ $objectionRequest->identity_number }}
-        </div>
-
-        <div class="mb-4">
-            <strong>Scan Identitas:</strong><br>
-            @if ($objectionRequest->identity_scan_path)
-                <img src="{{ asset('uploads/identity_scans/' . $objectionRequest->identity_scan_path) }}" alt="Scan Identitas"
-                    class="max-w-xs border rounded">
-            @else
-                <span>Tidak ada scan identitas.</span>
-            @endif
-        </div>
-
-        <div class="mb-4">
-            <strong>Nomor Telepon:</strong> {{ $objectionRequest->phone }}
-        </div>
-
-        <div class="mb-4">
-            <strong>Alasan Keberatan:</strong><br>
-            <p>{{ $objectionRequest->reason }}</p>
-        </div>
-
-        <div class="mb-4">
-            <strong>Informasi Tambahan:</strong><br>
-            <p>{{ $objectionRequest->additional_info ?? '-' }}</p>
-        </div>
-
-        <div class="mb-4">
-            <strong>Status:</strong>
-            @if ($objectionRequest->status === 'completed')
-                <span class="text-green-600 font-semibold">Selesai</span>
-            @elseif($objectionRequest->status === 'rejected')
-                <span class="text-red-600 font-semibold">Ditolak</span>
-            @else
-                <span class="text-yellow-600 font-semibold">{{ ucfirst($objectionRequest->status) }}</span>
-            @endif
-        </div>
-
-        <div class="mb-4">
-            <strong>Catatan Admin:</strong><br>
-            <p>{{ $objectionRequest->admin_notes ?? '-' }}</p>
-        </div>
-
-        <div class="mt-6">
-            <a href="{{ route('user.status.print-objection-proof', $objectionRequest->unique_search_id) }}" target="_blank"
-                class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Cetak Bukti Keberatan
+        <!-- Tombol -->
+        <div class="mt-10 flex justify-center">
+            <a href="{{ route('user.status.index') }}"
+                class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali
             </a>
         </div>
     </div>

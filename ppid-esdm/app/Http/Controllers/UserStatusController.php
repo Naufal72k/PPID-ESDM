@@ -54,14 +54,14 @@ class UserStatusController extends Controller
         return view('user.status.show-objection', compact('objectionRequest'));
     }
 
-    // Cetak bukti permohonan
+
     public function printRequestProof($unique_search_id)
     {
         $informationRequest = InformationRequest::where('unique_search_id', $unique_search_id)->firstOrFail();
         return view('information-requests.print-proof', compact('informationRequest'));
     }
 
-    // Cetak bukti keberatan
+
     public function printObjectionProof($unique_search_id)
     {
         $objectionRequest = ObjectionRequestV2::where('unique_search_id', $unique_search_id)->firstOrFail();
